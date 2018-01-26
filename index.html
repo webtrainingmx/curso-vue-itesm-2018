@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue</title>
+  <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col">
+
+      <div id="app" class="b-date">
+        Today is: {{ today }}
+        You have {{ tasks.length }} tasks {{ 1 + 3 }}
+
+        <button @click="toggleTasks" class="btn btn-primary">Toggle tasks
+        </button>
+
+        <div class="b-tasks alert alert-info" v-show="displayTasks">
+          <div class="b-task" v-for="task in sortedTasks">
+            <strong>Title: </strong>{{ task.title }} <br>
+            <strong>Date: </strong> {{ task.date }}
+          </div>
+        </div>
+
+
+        <div class="b-country" v-for="country in countries">
+          {{ country.name.common}}
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.min.js"></script>
+<script type="text/javascript">
+// IIFE
+(function () {
+
+  var serviceURL = 'http://countries-finder-api.webtraining.fun/countries'
+
+  new Vue({
+    el: '#app',
+    data: {
+      displayTasks: true,
+      today: new Date(),
+      countries : [],
+      tasks: [
+        {
+          title: 'Design UI',
+          date: new Date()
+        },
+        {
+          title: 'Create a boilerplate for my vue app',
+          date: new Date()
+        }
+      ]
+    },
+    created: function () {
+      // Connect to server in Japan
+      var self = this;
+      axios.get(serviceURL).then(function (response) {
+        this.countries  = response.data
+      })
+    },
+    methods: {
+      toggleTasks: function () {
+        this.displayTasks = !this.displayTasks
+        console.log('Click!')
+      }
+    },
+    computed: {
+      sortedTasks: function () {
+        return this.tasks.sort()
+      }
+    }
+  })
+})()
+</script>
+</body>
+</html>
